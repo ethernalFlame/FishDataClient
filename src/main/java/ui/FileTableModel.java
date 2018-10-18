@@ -3,14 +3,32 @@ package ui;
 import client.FishBean;
 
 import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class FileTableModel implements TableModel {
+public class FileTableModel extends AbstractTableModel {
 
     private Set<TableModelListener> listeners = new HashSet<>();
+
+    public Set<TableModelListener> getListeners() {
+        return listeners;
+    }
+
+    public void setListeners(Set<TableModelListener> listeners) {
+        this.listeners = listeners;
+    }
+
+    public List<FishBean> getFishes() {
+        return fishes;
+    }
+
+    public void setFishes(List<FishBean> fishes) {
+        this.fishes = fishes;
+    }
+
     private List<FishBean> fishes;
     public FileTableModel(List<FishBean> fishes){
         this.fishes = fishes;
@@ -65,18 +83,20 @@ public class FileTableModel implements TableModel {
         FishBean fishBean = fishes.get(rowIndex);
         switch (columnIndex){
             case 0:
-                return fishBean.getName();
+                return fishBean.getId();
             case 1:
-                return fishBean.getType();
+                return fishBean.getName();
             case 2:
-                return fishBean.getFamily().getName();
+                return fishBean.getType();
             case 3:
-                return fishBean.getFamily().getAreol();
+                return fishBean.getFamily().getName();
             case 4:
-                return fishBean.getPack();
+                return fishBean.getFamily().getAreol();
             case 5:
-                return fishBean.getProcessing();
+                return fishBean.getPack();
             case 6:
+                return fishBean.getProcessing();
+            case 7:
                 return fishBean.getWeigh();
         }
         return "kukuha";

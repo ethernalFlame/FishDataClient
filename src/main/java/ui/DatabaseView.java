@@ -1,8 +1,12 @@
 package ui;
 import client.FishBean;
+import controller.DeleteController;
+import data.FishDao;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +17,10 @@ public class DatabaseView extends JFrame {
     JTable jTable;
     JButton deleteButton, createNew, editButton;
     JPanel buttonPanel;
+    private FishDao fishDao;
 
-    public DatabaseView(List<FishBean> fishes){
+    public DatabaseView(List<FishBean> fishes, FishDao fishDao){
+        this.fishDao = fishDao;
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(1980,1020);
@@ -24,8 +30,10 @@ public class DatabaseView extends JFrame {
 
         fileTableModel = new FileTableModel(fishes);
         jTable = new JTable(fileTableModel);
+        jTable.setEditingRow(0);
 
         deleteButton = new JButton("Удалить");
+        deleteButton.addActionListener(new DeleteController(jTable, fishDao));
         editButton = new JButton("Редактировать");
         createNew = new JButton("Создать новую запись");
 
@@ -37,5 +45,6 @@ public class DatabaseView extends JFrame {
         add(buttonPanel, BorderLayout.SOUTH);
         add(jTable, BorderLayout.CENTER);
         setVisible(true);
+        setLocationRelativeTo(null);
     }
 }

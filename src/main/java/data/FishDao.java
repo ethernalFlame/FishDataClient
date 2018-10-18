@@ -15,7 +15,8 @@ public class FishDao {
 
     private static final String FROM = "SELECT * FROM fish WHERE name='%s' and type='%s' and family_id=%d  and processing_id=%d  and fish_package_id=%d;";
     private static final String CREATE = "INSERT INTO fish (name, type, value, weight, family_id, fish_package_id, processing_id) values ('%s', '%s', '%s', '%s', '%d', '%d', '%d');";
-    private static final String GET_ALL="SELECT * FROM fish;";
+    private static final String GET_ALL = "SELECT * FROM fish;";
+    private static final String DELETE = "DELETE FROM fish WHERE id=%d";
 
     private Connection connection;
     private PackageDao packageDao;
@@ -50,38 +51,36 @@ public class FishDao {
                 familyId = familyDao.getByName(fishBean, statement, areolId.get());
             } else familyId = Optional.empty();
 
-            boolean isUnique = false;
+            int uniqueCount = 0;
             if (!packageId.isPresent()) {
                 packageId = Optional.of(packageDao.save(fishBean));
-                isUnique = true;
+                uniqueCount++;
             }
             if (!areolId.isPresent()) {
+                uniqueCount++;
                 areolId = Optional.of(areolDao.save(fishBean));
-                isUnique = true;
             }
             if (!processingId.isPresent()) {
+                uniqueCount++;
                 processingId = Optional.of(processingDao.save(fishBean));
-                isUnique = true;
             }
             if (!familyId.isPresent()) {
+                uniqueCount++;
                 familyId = Optional.of(familyDao.save(fishBean, areolId.get()));
-                isUnique = true;
             }
 
             String value = numberInstance.format(fishBean.getValue());
             String weight = numberInstance.format(fishBean.getWeigh());
 
-            if (!isUnique) {
-                System.out.println(familyId.get());
-                String format = String.format(FROM, fishBean.getName(), fishBean.getType(), familyId.get(), processingId.get(), packageId.get());
 
-                ResultSet resultSet = statement.executeQuery(format);
-                resultSet.next();
-                if (resultSet.getDouble("value") == fishBean.getValue() || resultSet.getDouble("weight") == fishBean.getWeigh()) {
-                    isUnique = false;
-                }
+            String format = String.format(FROM, fishBean.getName(), fishBean.getType(), familyId.get(), processingId.get(), packageId.get());
+
+            ResultSet resultSet = statement.executeQuery(format);
+            if (!resultSet.next() || resultSet.getDouble("value") != fishBean.getValue() || resultSet.getDouble("weight") != fishBean.getWeigh()) {
+                uniqueCount++;
             }
-            if (isUnique) {
+
+            if (uniqueCount > 0) {
                 statement.executeUpdate(String.format(CREATE, fishBean.getName(), fishBean.getType(), value, weight, familyId.get(), packageId.get(), processingId.get()));
             }
         } catch (SQLException e) {
@@ -101,6 +100,15 @@ public class FishDao {
             e.printStackTrace();
         }
         return fishBeans;
+    }
+
+    public void delete(long id) {
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(String.format(DELETE, id));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private FishBean mapToFishBean(ResultSet resultSet) {
