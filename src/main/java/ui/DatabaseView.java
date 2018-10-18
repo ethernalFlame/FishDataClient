@@ -4,6 +4,7 @@ import client.FishBean;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseView extends JFrame {
 
@@ -13,12 +14,11 @@ public class DatabaseView extends JFrame {
     JButton deleteButton, createNew, editButton;
     JPanel buttonPanel;
 
-    public DatabaseView(){
+    public DatabaseView(List<FishBean> fishes){
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(1980,1020);
 
-        fishes = new ArrayList<>();
 //        fishes.add(new FishBean("рыба простая", "семейство хорошее", "лужа", "Полиэтилен", "1000", "1кг"));
 //        fishes.add(new FishBean("рыба сложная", "семейство прекрасное", "большая лужа", "золото", "9999", "19кг"));
 

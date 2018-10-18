@@ -86,5 +86,17 @@ public class FishBean {
         this.type = type;
     }
 
-
+    @Override
+    public String toString() {
+        return "FishBean{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", name='" + name + '\'' +
+                ", family=" + family +
+                ", pack='" + pack + '\'' +
+                ", processing='" + processing + '\'' +
+                ", weigh=" + weigh +
+                ", value=" + value +
+                '}';
+    }
 }
