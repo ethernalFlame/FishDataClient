@@ -1,5 +1,6 @@
 package ui;
 
+import client.ColAndRow;
 import client.FishBean;
 
 import javax.swing.event.TableModelListener;
@@ -30,9 +31,9 @@ public class FileTableModel extends AbstractTableModel {
     }
 
     private List<FishBean> fishes;
+
     public FileTableModel(List<FishBean> fishes){
         this.fishes = fishes;
-
     }
 
     @Override
@@ -42,30 +43,48 @@ public class FileTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 6;
+        return 9;
     }
 
     @Override
     public String getColumnName(int columnIndex) {
         switch (columnIndex){
             case 0:
-                return "Имя";
+                return "ID";
             case 1:
-                return "Тип";
+                return "Имя";
             case 2:
-                return "Семейство";
+                return "Тип";
             case 3:
-                return "Среда обитания";
+                return "Семейство";
             case 4:
-                return "Упаковка";
+                return "Среда обитания";
             case 5:
-                return "Способ обработки";
+                return "Упаковка";
             case 6:
-                return "Вес";
+                return "Способ обработки";
             case 7:
+                return "Вес";
+            case 8:
                 return "Товарная ценность";
         }
         return "pudge";
+    }
+
+    public Set<ColAndRow> getEditableCells() {
+        return editableCells;
+    }
+
+    public void setEditableCells(Set<ColAndRow> editableCells) {
+        this.editableCells = editableCells;
+    }
+
+    private Set<ColAndRow> editableCells = new HashSet<>();
+
+    public void setRowEditable(int rowIndex) {
+        for (int i = 0; i < getColumnCount(); i++) {
+            editableCells.add(new ColAndRow(rowIndex, i));
+        }
     }
 
     @Override
@@ -75,7 +94,7 @@ public class FileTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return false;
+        return editableCells.contains(new ColAndRow(rowIndex, columnIndex));
     }
 
     @Override
@@ -98,6 +117,8 @@ public class FileTableModel extends AbstractTableModel {
                 return fishBean.getProcessing();
             case 7:
                 return fishBean.getWeigh();
+            case 8:
+                return fishBean.getValue();
         }
         return "kukuha";
     }

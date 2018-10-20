@@ -17,6 +17,7 @@ public class FishDao {
     private static final String CREATE = "INSERT INTO fish (name, type, value, weight, family_id, fish_package_id, processing_id) values ('%s', '%s', '%s', '%s', '%d', '%d', '%d');";
     private static final String GET_ALL = "SELECT * FROM fish;";
     private static final String DELETE = "DELETE FROM fish WHERE id=%d";
+    private static final String UPDATE = "UPDATE fish SET name='%s', type='%s', family_id=%d, fish_package_id=%d, processing_id=%d, weight='%s', value ='%s' WHERE id=%d";
 
     private Connection connection;
     private PackageDao packageDao;
@@ -37,6 +38,17 @@ public class FishDao {
         NumberFormat nf = numberInstance;
         nf.setMinimumFractionDigits(2);
         nf.setMaximumFractionDigits(1);
+    }
+
+    public void update(FishBean fishBean, long id) {
+        try {
+            Statement statement = connection.createStatement();
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void save(FishBean fishBean) throws Exception {
