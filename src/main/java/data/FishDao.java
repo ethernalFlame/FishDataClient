@@ -40,13 +40,29 @@ public class FishDao {
         nf.setMaximumFractionDigits(1);
     }
 
-    public void update(FishBean fishBean, long id) {
+    public void update(FishBean fishBean) {
         try {
             Statement statement = connection.createStatement();
+            Optional<Long> areolDaoByName = areolDao.getByName(fishBean);
+            if (!areolDaoByName.isPresent()) {
+                areolDaoByName = Optional.of(areolDao.save(fishBean));
+            }
+            Optional<Long> familyDaoByName = familyDao.getByName(fishBean, statement, areolDaoByName.get());
+            if (!familyDaoByName.isPresent()) {
+                familyDaoByName = Optional.of(familyDao.save(fishBean, areolDaoByName.get()));
+            }
+            Optional<Long> packageDaoByName = packageDao.getByName(fishBean);
+            if (!packageDaoByName.isPresent()) {
+                packageDaoByName = Optional.of(packageDao.save(fishBean));
+            }
+            Optional<Long> processingDaoByName = processingDao.getByName(fishBean);
+            if (!processingDaoByName.isPresent()) {
+                processingDaoByName = Optional.of(processingDao.save(fishBean));
+            }
+            statement.execute(String.format(UPDATE, fishBean.getName(), fishBean.getType(),  familyDaoByName.get(), packageDaoByName.get(),
+                    processingDaoByName.get(), fishBean.getWeigh(), fishBean.getValue(), fishBean.getId()));
 
-
-
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

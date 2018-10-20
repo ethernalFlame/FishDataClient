@@ -2,6 +2,7 @@ package controller;
 
 import client.FamilyBean;
 import client.FishBean;
+import ui.FishEditView;
 import data.FishDao;
 import ui.DatabaseView;
 
@@ -25,7 +26,7 @@ public class EditController implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         int selectedRow = jTable.getSelectedRow();
         FishBean fishBean = mapToFishBean(selectedRow);
-        fishDao.update(fishBean, 1L);
+        new FishEditView(fishBean, fishDao, databaseView);
     }
 
     public FishBean mapToFishBean(int selectedRow) {

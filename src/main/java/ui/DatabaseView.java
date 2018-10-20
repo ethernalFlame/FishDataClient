@@ -75,6 +75,78 @@ public class DatabaseView extends JFrame {
         add(buttonPanel, BorderLayout.SOUTH);
         add(dataPanel, BorderLayout.NORTH);
         setVisible(true);
-        setLocationRelativeTo(null);
+    }
+
+    public void updateFishes() {
+        ArrayList<FishBean> all = fishDao.getAll();
+        ((FileTableModel) jTable.getModel()).setFishes(all);
+        fileTableModel.setFishes(all);
+        this.fishes = all;
+        ((FileTableModel) jTable.getModel()).fireTableDataChanged();
+        jTable.repaint();
+    }
+
+    public FileTableModel getFileTableModel() {
+        return fileTableModel;
+    }
+
+    public void setFileTableModel(FileTableModel fileTableModel) {
+        this.fileTableModel = fileTableModel;
+    }
+
+    public ArrayList<FishBean> getFishes() {
+        return fishes;
+    }
+
+    public void setFishes(ArrayList<FishBean> fishes) {
+        this.fishes = fishes;
+    }
+
+    public JTable getjTable() {
+        return jTable;
+    }
+
+    public void setjTable(JTable jTable) {
+        this.jTable = jTable;
+    }
+
+    public JButton getDeleteButton() {
+        return deleteButton;
+    }
+
+    public void setDeleteButton(JButton deleteButton) {
+        this.deleteButton = deleteButton;
+    }
+
+    public JButton getCreateNew() {
+        return createNew;
+    }
+
+    public void setCreateNew(JButton createNew) {
+        this.createNew = createNew;
+    }
+
+    public JButton getEditButton() {
+        return editButton;
+    }
+
+    public void setEditButton(JButton editButton) {
+        this.editButton = editButton;
+    }
+
+    public JPanel getButtonPanel() {
+        return buttonPanel;
+    }
+
+    public void setButtonPanel(JPanel buttonPanel) {
+        this.buttonPanel = buttonPanel;
+    }
+
+    public FishDao getFishDao() {
+        return fishDao;
+    }
+
+    public void setFishDao(FishDao fishDao) {
+        this.fishDao = fishDao;
     }
 }
