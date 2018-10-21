@@ -1,35 +1,34 @@
 package ui;
 
-import client.FishBean;
-import controller.CreateController;
-import controller.DeleteController;
-import controller.EditController;
-import data.FishDao;
+import client.ProcessingDto;
+import controller.ProcessingDeleteController;
+import controller.ProcessingEditController;
+import data.ProcessingDao;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
-public class DatabaseView extends JFrame {
-
-    ArrayList<FishBean> fishes;
+public class ProcessingView extends JFrame {
+    List<ProcessingDto> processingDtos;
     JTable jTable;
-    JButton deleteButton, createNew, editButton, processingTable;
+    JButton deleteButton, createNew, editButton;
     JPanel buttonPanel;
-    private FishDao fishDao;
+    DatabaseView fileTableModel;
+    private ProcessingDao processingDao;
 
-    public DatabaseView(List<FishBean> fishes, FishDao fishDao) {
-        this.fishDao = fishDao;
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(1080, 720);
+    public ProcessingView(List<ProcessingDto> processingDtos, ProcessingDao processingDao, DatabaseView fileTableModel) {
+        this.processingDao = processingDao;
+        this.fileTableModel = fileTableModel;
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setSize(600, 600);
 
-        FileTableModel fileTableModel = new FileTableModel(fishes);
-        jTable = new JTable(fileTableModel);
+        ProcessingTableModel processingTableModel = new ProcessingTableModel(processingDtos);
+        jTable = new JTable(processingTableModel);
         jTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -43,7 +42,7 @@ public class DatabaseView extends JFrame {
                 int rowindex = jTable.getSelectedRow();
                 if (rowindex < 0)
                     return;
-                if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
+                if (e.isPopupTrigger() && e.getComponent() instanceof JTable) {
                     JPopupMenu popup = new JPopupMenu("lol");
                     popup.add(editButton);
                     popup.add(deleteButton);
@@ -54,25 +53,17 @@ public class DatabaseView extends JFrame {
         });
 
         deleteButton = new JButton("Удалить");
-        deleteButton.addActionListener(new DeleteController(jTable, fishDao));
+        deleteButton.addActionListener(new ProcessingDeleteController(jTable, processingDao));
         editButton = new JButton("Редактировать");
-        editButton.addActionListener(new  EditController(fishDao, this, jTable));
+        editButton.addActionListener(new ProcessingEditController(processingDao, this, jTable));
         createNew = new JButton("Создать новую запись");
-        createNew.addActionListener(new CreateController(fishDao, this));
-        processingTable = new JButton("Таблица \"способ обработки\"");
-        processingTable.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new ProcessingView(fishDao.getProcessingDao().getAll(), fishDao.getProcessingDao(), DatabaseView.this);
-            }
-        });
+        //createNew.addActionListener(new CreateController(fishDao, this));
 
         buttonPanel = new JPanel();
         buttonPanel.add(createNew);
-        buttonPanel.add(processingTable);
         buttonPanel.setVisible(true);
 
-        JScrollPane jScrollPane = new JScrollPane(jTable,  JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane jScrollPane = new JScrollPane(jTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         JPanel dataPanel = new JPanel();
         jTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         dataPanel.add(jScrollPane, BorderLayout.CENTER);
@@ -82,24 +73,30 @@ public class DatabaseView extends JFrame {
         add(dataPanel, BorderLayout.NORTH);
         setVisible(true);
         setLocationRelativeTo(null);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                fileTableModel.updateFishes();
+                ((FileTableModel) fileTableModel.getjTable().getModel()).fireTableDataChanged();
+            }
+        });
     }
 
-    public void updateFishes() {
-        ArrayList<FishBean> all = fishDao.getAll();
-        jTable.setModel(new FileTableModel(all));
-        this.fishes = all;
+    public void updateProcessing() {
+        List<ProcessingDto> all = processingDao.getAll();
+        jTable.setModel(new ProcessingTableModel(all));
+        this.processingDtos = all;
 
-  //
+        //
         jTable.repaint();
     }
 
-    public ArrayList<FishBean> getFishes() {
-        return fishes;
+    public List<ProcessingDto> getProcessing() {
+        return processingDtos;
     }
 
-    public void setFishes(ArrayList<FishBean> fishes) {
-        this.fishes = fishes;
-    }
 
     public JTable getjTable() {
         return jTable;
@@ -139,13 +136,5 @@ public class DatabaseView extends JFrame {
 
     public void setButtonPanel(JPanel buttonPanel) {
         this.buttonPanel = buttonPanel;
-    }
-
-    public FishDao getFishDao() {
-        return fishDao;
-    }
-
-    public void setFishDao(FishDao fishDao) {
-        this.fishDao = fishDao;
     }
 }

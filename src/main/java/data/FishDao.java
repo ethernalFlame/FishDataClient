@@ -59,7 +59,7 @@ public class FishDao {
             if (!processingDaoByName.isPresent()) {
                 processingDaoByName = Optional.of(processingDao.save(fishBean));
             }
-            statement.execute(String.format(UPDATE, fishBean.getName(), fishBean.getType(),  familyDaoByName.get(), packageDaoByName.get(),
+            statement.execute(String.format(UPDATE, fishBean.getName(), fishBean.getType(), familyDaoByName.get(), packageDaoByName.get(),
                     processingDaoByName.get(), fishBean.getWeigh(), fishBean.getValue(), fishBean.getId()));
 
         } catch (Exception e) {
@@ -104,8 +104,11 @@ public class FishDao {
             String format = String.format(FROM, fishBean.getName(), fishBean.getType(), familyId.get(), processingId.get(), packageId.get());
 
             ResultSet resultSet = statement.executeQuery(format);
-            if (!resultSet.next() || resultSet.getDouble("value") != fishBean.getValue() || resultSet.getDouble("weight") != fishBean.getWeigh()) {
-                uniqueCount++;
+
+            if (resultSet.next()) {
+                if (resultSet.getDouble("value") != fishBean.getValue() || resultSet.getDouble("weight") != fishBean.getWeigh()) {
+                    uniqueCount++;
+                }
             }
 
             if (uniqueCount > 0) {
@@ -154,4 +157,79 @@ public class FishDao {
         }
     }
 
+    public static String getFROM() {
+        return FROM;
+    }
+
+    public static String getCREATE() {
+        return CREATE;
+    }
+
+    public static String getGetAll() {
+        return GET_ALL;
+    }
+
+    public static String getDELETE() {
+        return DELETE;
+    }
+
+    public static String getUPDATE() {
+        return UPDATE;
+    }
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
+    public PackageDao getPackageDao() {
+        return packageDao;
+    }
+
+    public void setPackageDao(PackageDao packageDao) {
+        this.packageDao = packageDao;
+    }
+
+    public AreolDao getAreolDao() {
+        return areolDao;
+    }
+
+    public void setAreolDao(AreolDao areolDao) {
+        this.areolDao = areolDao;
+    }
+
+    public ProcessingDao getProcessingDao() {
+        return processingDao;
+    }
+
+    public void setProcessingDao(ProcessingDao processingDao) {
+        this.processingDao = processingDao;
+    }
+
+    public FamilyDao getFamilyDao() {
+        return familyDao;
+    }
+
+    public void setFamilyDao(FamilyDao familyDao) {
+        this.familyDao = familyDao;
+    }
+
+    public NumberFormat getNumberInstance() {
+        return numberInstance;
+    }
+
+    public void setNumberInstance(NumberFormat numberInstance) {
+        this.numberInstance = numberInstance;
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
 }
