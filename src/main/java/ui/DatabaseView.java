@@ -5,13 +5,12 @@ import controller.CreateController;
 import controller.DeleteController;
 import controller.EditController;
 import data.FishDao;
+import ui.areol.AreolView;
 import ui.fish_package.PackageView;
 import ui.processing.ProcessingView;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ public class DatabaseView extends JFrame {
 
     ArrayList<FishBean> fishes;
     JTable jTable;
-    JButton deleteButton, createNew, editButton, processingTable, packageTable;
+    JButton deleteButton, createNew, editButton, processingTable, packageTable, areolTable;
     JPanel buttonPanel;
     private FishDao fishDao;
 
@@ -62,19 +61,17 @@ public class DatabaseView extends JFrame {
         createNew = new JButton("Создать новую запись");
         createNew.addActionListener(new CreateController(fishDao, this));
         processingTable = new JButton("Таблица \"способ обработки\"");
-        processingTable.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new ProcessingView(fishDao.getProcessingDao().getAll(), fishDao.getProcessingDao(), DatabaseView.this);
-            }
-        });
+        processingTable.addActionListener(e -> new ProcessingView(fishDao.getProcessingDao().getAll(), fishDao.getProcessingDao(), DatabaseView.this));
         packageTable = new JButton("Таблица \"упаковка\"");
         packageTable.addActionListener(e -> new PackageView(fishDao.getPackageDao().getAll(), fishDao.getPackageDao(), DatabaseView.this));
+        areolTable = new JButton("Таблица \"Среда обитания\"");
+        areolTable.addActionListener(e -> new AreolView(fishDao.getAreolDao().getAll(), fishDao.getAreolDao(), DatabaseView.this));
 
         buttonPanel = new JPanel();
         buttonPanel.add(createNew);
         buttonPanel.add(processingTable);
         buttonPanel.add(packageTable);
+        buttonPanel.add(areolTable);
         buttonPanel.setVisible(true);
 
         JScrollPane jScrollPane = new JScrollPane(jTable,  JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);

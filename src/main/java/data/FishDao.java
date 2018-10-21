@@ -43,9 +43,9 @@ public class FishDao {
     public void update(FishBean fishBean) {
         try {
             Statement statement = connection.createStatement();
-            Optional<Long> areolDaoByName = areolDao.getByName(fishBean);
+            Optional<Long> areolDaoByName = areolDao.getByName(fishBean.getFamily().getAreol());
             if (!areolDaoByName.isPresent()) {
-                areolDaoByName = Optional.of(areolDao.save(fishBean));
+                areolDaoByName = Optional.of(areolDao.save(fishBean.getFamily().getAreol()));
             }
             Optional<Long> familyDaoByName = familyDao.getByName(fishBean, statement, areolDaoByName.get());
             if (!familyDaoByName.isPresent()) {
@@ -72,7 +72,7 @@ public class FishDao {
             Statement statement = connection.createStatement();
 
             Optional<Long> packageId = packageDao.getByName(fishBean.getPack());
-            Optional<Long> areolId = areolDao.getByName(fishBean);
+            Optional<Long> areolId = areolDao.getByName(fishBean.getFamily().getAreol());
             Optional<Long> processingId = processingDao.getByName(fishBean.getProcessing());
             Optional<Long> familyId;
             if (areolId.isPresent()) {
@@ -86,7 +86,7 @@ public class FishDao {
             }
             if (!areolId.isPresent()) {
                 uniqueCount++;
-                areolId = Optional.of(areolDao.save(fishBean));
+                areolId = Optional.of(areolDao.save(fishBean.getFamily().getAreol()));
             }
             if (!processingId.isPresent()) {
                 uniqueCount++;

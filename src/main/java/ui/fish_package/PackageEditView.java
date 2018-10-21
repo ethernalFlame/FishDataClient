@@ -2,7 +2,6 @@ package ui.fish_package;
 
 import client.PackageDto;
 import data.PackageDao;
-import ui.processing.ProcessingTableModel;
 
 import javax.swing.*;
 import java.awt.*;

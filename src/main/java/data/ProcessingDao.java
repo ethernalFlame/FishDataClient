@@ -1,6 +1,5 @@
 package data;
 
-import client.FishBean;
 import client.ProcessingDto;
 
 import java.sql.Connection;
@@ -79,11 +78,11 @@ public class ProcessingDao {
     public ProcessingDto getById(long id) {
         try {
             ResultSet resultSet = statement.executeQuery(String.format(GET_BY_ID, id));
-            resultSet.next();
+            if (resultSet.next())
             return new ProcessingDto(resultSet.getLong("id"), resultSet.getString("name"));
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
+        return new ProcessingDto(-1, "");
     }
 }

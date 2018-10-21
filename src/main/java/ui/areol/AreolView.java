@@ -1,10 +1,10 @@
-package ui.fish_package;
+package ui.areol;
 
-import client.PackageDto;
-import controller.fish_package.PackageCreateController;
-import controller.fish_package.PackageDeleteController;
-import controller.fish_package.PackageEditController;
-import data.PackageDao;
+import client.AreolDto;
+import controller.areol.AreolCreateController;
+import controller.areol.AreolDeleteController;
+import controller.areol.AreolEditController;
+import data.AreolDao;
 import ui.DatabaseView;
 import ui.FileTableModel;
 
@@ -16,22 +16,22 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
 
-public class PackageView extends JFrame {
-    List<PackageDto> packageDtos;
+public class AreolView extends JFrame {
+    List<AreolDto> areolDtos;
     JTable jTable;
     JButton deleteButton, createNew, editButton;
     JPanel buttonPanel;
     DatabaseView fileTableModel;
-    private PackageDao packageDao;
+    private AreolDao areolDao;
 
-    public PackageView(List<PackageDto> packageDtos, PackageDao packageDao, DatabaseView fileTableModel) {
-        this.packageDao = packageDao;
+    public AreolView(List<AreolDto> areolDtos, AreolDao areolDao, DatabaseView fileTableModel) {
+        this.areolDao = areolDao;
         this.fileTableModel = fileTableModel;
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(600, 600);
 
-        PackageTableModel packageTableModel = new PackageTableModel(packageDtos);
-        jTable = new JTable(packageTableModel);
+        AreolTableModel areolTableModel = new AreolTableModel(areolDtos);
+        jTable = new JTable(areolTableModel);
         jTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -56,11 +56,11 @@ public class PackageView extends JFrame {
         });
 
         deleteButton = new JButton("Удалить");
-        deleteButton.addActionListener(new PackageDeleteController(jTable, packageDao));
+        deleteButton.addActionListener(new AreolDeleteController(jTable, areolDao));
         editButton = new JButton("Редактировать");
-        editButton.addActionListener(new PackageEditController(packageDao, this, jTable));
+        editButton.addActionListener(new AreolEditController(areolDao, this, jTable));
         createNew = new JButton("Создать новую запись");
-        createNew.addActionListener(new PackageCreateController(packageDao, this));
+        createNew.addActionListener(new AreolCreateController(areolDao, this));
 
         buttonPanel = new JPanel();
         buttonPanel.add(createNew);
@@ -88,17 +88,12 @@ public class PackageView extends JFrame {
     }
 
     public void updatePackage() {
-        List<PackageDto> all = packageDao.getAll();
-        jTable.setModel(new PackageTableModel(all));
-        this.packageDtos = all;
+        List<AreolDto> all = areolDao.getAll();
+        jTable.setModel(new AreolTableModel(all));
+        this.areolDtos = all;
 
         jTable.repaint();
     }
-
-    public List<PackageDto> getPackages() {
-        return packageDtos;
-    }
-
 
     public JTable getjTable() {
         return jTable;
