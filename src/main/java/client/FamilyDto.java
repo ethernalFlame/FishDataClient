@@ -4,11 +4,21 @@ public class FamilyDto {
     private long id;
     private String name;
     private long areolId;
+    private String areolName;
 
-    public FamilyDto(long id, String name, long areolId) {
+    public FamilyDto(long id, String name, long areolId, String areolName) {
         this.id = id;
         this.name = name;
         this.areolId = areolId;
+        this.areolName = areolName;
+    }
+
+    public String getAreolName() {
+        return areolName;
+    }
+
+    public void setAreolName(String areolName) {
+        this.areolName = areolName;
     }
 
     public long getId() {

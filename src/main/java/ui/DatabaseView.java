@@ -6,6 +6,7 @@ import controller.DeleteController;
 import controller.EditController;
 import data.FishDao;
 import ui.areol.AreolView;
+import ui.family.FamilyView;
 import ui.fish_package.PackageView;
 import ui.processing.ProcessingView;
 
@@ -20,7 +21,7 @@ public class DatabaseView extends JFrame {
 
     ArrayList<FishBean> fishes;
     JTable jTable;
-    JButton deleteButton, createNew, editButton, processingTable, packageTable, areolTable;
+    JButton deleteButton, createNew, editButton, processingTable, packageTable, areolTable, familyTable;
     JPanel buttonPanel;
     private FishDao fishDao;
 
@@ -66,12 +67,15 @@ public class DatabaseView extends JFrame {
         packageTable.addActionListener(e -> new PackageView(fishDao.getPackageDao().getAll(), fishDao.getPackageDao(), DatabaseView.this));
         areolTable = new JButton("Таблица \"Среда обитания\"");
         areolTable.addActionListener(e -> new AreolView(fishDao.getAreolDao().getAll(), fishDao.getAreolDao(), DatabaseView.this));
+        familyTable = new JButton("Таблица \"Семейство\"");
+        familyTable.addActionListener(e -> new FamilyView(fishDao.getFamilyDao().getAll(), fishDao.getFamilyDao(), DatabaseView.this));
 
         buttonPanel = new JPanel();
         buttonPanel.add(createNew);
         buttonPanel.add(processingTable);
         buttonPanel.add(packageTable);
         buttonPanel.add(areolTable);
+        buttonPanel.add(familyTable);
         buttonPanel.setVisible(true);
 
         JScrollPane jScrollPane = new JScrollPane(jTable,  JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);

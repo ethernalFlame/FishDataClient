@@ -41,7 +41,7 @@ public class AreolDao {
         try {
             ResultSet resultSet = statement.executeQuery(GET_ALL);
             while (resultSet.next()) {
-                areolDtos.add(mapToProcessingDto(resultSet));
+                areolDtos.add(mapToAreolDto(resultSet));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -49,7 +49,7 @@ public class AreolDao {
         return areolDtos;
     }
 
-    private AreolDto mapToProcessingDto(ResultSet resultSet) {
+    private AreolDto mapToAreolDto(ResultSet resultSet) {
         try {
             return new AreolDto(resultSet.getLong("id"), resultSet.getString("name"));
         } catch (SQLException e) {

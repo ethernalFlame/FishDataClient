@@ -32,7 +32,7 @@ public class FishDao {
         this.packageDao = new PackageDao(connection);
         this.areolDao = new AreolDao(connection);
         this.processingDao = new ProcessingDao(connection);
-        this.familyDao = new FamilyDao(connection);
+        this.familyDao = new FamilyDao(connection, areolDao);
         locale = Locale.ENGLISH;
         numberInstance = NumberFormat.getNumberInstance(locale);
         NumberFormat nf = numberInstance;
@@ -47,9 +47,9 @@ public class FishDao {
             if (!areolDaoByName.isPresent()) {
                 areolDaoByName = Optional.of(areolDao.save(fishBean.getFamily().getAreol()));
             }
-            Optional<Long> familyDaoByName = familyDao.getByName(fishBean, statement, areolDaoByName.get());
+            Optional<Long> familyDaoByName = familyDao.getByName(fishBean.getFamily().getName(), statement, areolDaoByName.get());
             if (!familyDaoByName.isPresent()) {
-                familyDaoByName = Optional.of(familyDao.save(fishBean, areolDaoByName.get()));
+                familyDaoByName = Optional.of(familyDao.save(fishBean.getFamily().getName(), fishBean.getFamily().getAreol()));
             }
             Optional<Long> packageDaoByName = packageDao.getByName(fishBean.getPack());
             if (!packageDaoByName.isPresent()) {
@@ -76,7 +76,7 @@ public class FishDao {
             Optional<Long> processingId = processingDao.getByName(fishBean.getProcessing());
             Optional<Long> familyId;
             if (areolId.isPresent()) {
-                familyId = familyDao.getByName(fishBean, statement, areolId.get());
+                familyId = familyDao.getByName(fishBean.getFamily().getName(), statement, areolId.get());
             } else familyId = Optional.empty();
 
             int uniqueCount = 0;
@@ -94,7 +94,7 @@ public class FishDao {
             }
             if (!familyId.isPresent()) {
                 uniqueCount++;
-                familyId = Optional.of(familyDao.save(fishBean, areolId.get()));
+                familyId = Optional.of(familyDao.save(fishBean.getFamily().getName(), fishBean.getFamily().getAreol()));
             }
 
             String value = numberInstance.format(fishBean.getValue());
