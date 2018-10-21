@@ -1,7 +1,5 @@
-package ui;
+package ui.processing;
 
-import client.FamilyBean;
-import client.FishBean;
 import client.ProcessingDto;
 import data.ProcessingDao;
 
@@ -10,31 +8,34 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class ProcessingEditView extends JFrame {
+public class ProcessingCreateView extends JFrame {
     private final JButton jButton;
     private final JButton jButton1;
-    private ProcessingDto processingDto;
+
     private JLabel jLabel;
     private JTextField jTextField;
     private ProcessingDao processingDao;
     private ProcessingView processingView;
 
-    public ProcessingEditView(ProcessingDto processingDto, ProcessingDao processingDao, ProcessingView processingTableModel) {
+    public ProcessingCreateView (ProcessingDao processingDao, ProcessingView processingTableModel) {
         this.processingDao = processingDao;
         this.processingView= processingTableModel;
-        this.processingDto = processingDto;
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(600, 600);
         setLayout(new GridLayout(0, 2));
-        initLabels(processingDto);
         setVisible(true);
         jButton = new JButton("Очистить");
-        jButton.addActionListener(e -> clear(processingDto));
+        jButton.addActionListener(e -> clear());
+       initLabels();
         add(jButton);
         jButton1 = new JButton("Подтвердить");
         jButton1.addActionListener(e -> {
-            this.processingDao.update(mapToProcessing());
+            try {
+                this.processingDao.save(this.jTextField.getText());
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
             processingView.updateProcessing();
         });
         add(jButton1);
@@ -48,18 +49,14 @@ public class ProcessingEditView extends JFrame {
         });
     }
 
-    private ProcessingDto mapToProcessing() {
-        return new ProcessingDto(this.processingDto.getId(), jTextField.getText());
-    }
-
-    public void initLabels(ProcessingDto processingDto) {
+    public void initLabels() {
         jLabel = new JLabel("Название");
-        jTextField = new JTextField(processingDto.getName());
+        jTextField = new JTextField("");
         add(jLabel);
         add(jTextField);
     }
 
-    private void clear(ProcessingDto processingDto) {
-        jTextField.setText(processingDto.getName());
+    private void clear() {
+        jTextField.setText("");
     }
 }

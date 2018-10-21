@@ -1,4 +1,4 @@
-package ui;
+package ui.processing;
 
 import client.ProcessingDto;
 
@@ -49,7 +49,7 @@ public class ProcessingTableModel extends AbstractTableModel {
             case 0:
                 return "ID";
             case 1:
-                return "Имя";
+                return "Название";
         }
         return "pudge";
     }

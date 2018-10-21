@@ -1,7 +1,7 @@
-package controller;
+package controller.processing;
 
 import data.ProcessingDao;
-import ui.ProcessingTableModel;
+import ui.processing.ProcessingTableModel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

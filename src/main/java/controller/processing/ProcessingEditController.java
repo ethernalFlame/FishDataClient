@@ -1,10 +1,9 @@
-package controller;
+package controller.processing;
 
-import client.FishBean;
 import client.ProcessingDto;
-import data.FishDao;
 import data.ProcessingDao;
-import ui.*;
+import ui.processing.ProcessingEditView;
+import ui.processing.ProcessingView;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

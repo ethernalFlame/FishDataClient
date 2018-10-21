@@ -26,9 +26,9 @@ public class ProcessingDao {
         this.statement = connection.createStatement();
     }
 
-    public long save(FishBean fishBean) throws Exception {
-        statement.executeUpdate(String.format(CREATE_PROCESSING, fishBean.getProcessing()));
-        return getByName(fishBean).orElseThrow(() -> new Exception("no element!"));
+    public long save(String processing) throws Exception {
+        statement.executeUpdate(String.format(CREATE_PROCESSING, processing));
+        return getByName(processing).orElseThrow(() -> new Exception("no element!"));
     }
 
     public void update(ProcessingDto processingDto) {
@@ -69,8 +69,8 @@ public class ProcessingDao {
         }
     }
 
-    public Optional<Long> getByName(FishBean fishBean) throws SQLException {
-        ResultSet resultSet = statement.executeQuery(String.format(FROM_PROCESSING, fishBean.getProcessing()));
+    public Optional<Long> getByName(String processing) throws SQLException {
+        ResultSet resultSet = statement.executeQuery(String.format(FROM_PROCESSING, processing));
         if (resultSet.next()) {
             return Optional.of(resultSet.getLong("id"));
         } else return Optional.empty();
